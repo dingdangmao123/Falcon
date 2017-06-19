@@ -8,8 +8,7 @@
 
 #### 主要函数
 
-- newTak()开启一个新任务
-
+- newTak()开启一个新任务，同一个调用链可多次调用
 
 - exec() 提交执行的任务
 
@@ -19,7 +18,9 @@
 
 - error() 任务执行出错后执行，后取消后续任务
 
--  start() 开启任务
+- start() 开启任务
+
+
 #### demo
 
 ````
@@ -30,8 +31,7 @@
                Log.i("Thread",thd.getName());
                String str=Curl.getText("http://www.baidu.com");
                Log.i("call",str);
-               //tv2.setText("hello world");
-               return str;
+               return str;
            }
        }).flip(Shoulder.getMain()).exec(new Action(){
            @Override
@@ -39,9 +39,8 @@
                Log.i("call2",obj.toString());
                Thread thd=Thread.currentThread();
                Log.i("Thread",thd.getName());
-               tv.setText(obj.toString());
-
-               return "down";
+               tv.setText(obj.toString();
+               return "down";
            }
        }).finish(new Action0() {
            @Override
@@ -54,5 +53,15 @@
                Log.i("error",obj.toString());
            }
        }).start();
-      ````
+    
+
+#### 备注
+
+主要受到RxJava链式调用和线程切换启发，因此山寨了这么一个简单的框架，功能并不完善，有时间再更新。
+
+
+
+
+
+
 
