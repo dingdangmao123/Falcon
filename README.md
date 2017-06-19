@@ -1,6 +1,6 @@
 ### Falcon - 一个简单的Android异步任务执行框架
 
-<<<<<<< HEAD
+
 ​
 
 #### 主要特性
@@ -41,9 +41,7 @@
 ​
 - 原理很简单，就是线程池和handler的使用。
 ​
-#### demo
-​
-=======
+
 #### 主要特性
 
 - Falcon通过链式调用完成提交执行
@@ -77,9 +75,8 @@
 
 - 原理很简单，就是线程池和handler的使用。
 
-#### demo
 
->>>>>>> 4994d7df121b2d5f755d9c3f3244894644f30b45
+
 ````
     Falcon.newTask().flip(Shoulder.getBack()).exec(new Action(){
            @Override
@@ -88,16 +85,16 @@
                Log.i("Thread",thd.getName());
                String str=Curl.getText("http://www.baidu.com");
                Log.i("call",str);
-<<<<<<< HEAD
+
                return str;
-=======
+
                return str;
->>>>>>> 4994d7df121b2d5f755d9c3f3244894644f30b45
+
            }
        }).flip(Shoulder.getMain()).exec(new Action(){
            @Override
            public Object call(Object obj) {
-<<<<<<< HEAD
+
                Log.i("call",obj.toString());
                Thread thd=Thread.currentThread();
                Log.i("Thread",thd.getName());
@@ -105,7 +102,7 @@
                return "down";
            }
        }).finish(new Action() {
-=======
+
                Log.i("call2",obj.toString());
                Thread thd=Thread.currentThread();
                Log.i("Thread",thd.getName());
@@ -113,24 +110,21 @@
                return "down";
            }
        }).finish(new Action0() {
->>>>>>> 4994d7df121b2d5f755d9c3f3244894644f30b45
+
            @Override
            public void call(Object obj) {
                Log.i("finish",obj.toString());
            }
-<<<<<<< HEAD
+
        }).error(new Action() {
-=======
+
        }).error(new Action0() {
->>>>>>> 4994d7df121b2d5f755d9c3f3244894644f30b45
+
            @Override
            public void call(Object obj) {
                Log.i("error",obj.toString());
            }
        }).start();
-<<<<<<< HEAD
+
     
-​
-=======
-    
->>>>>>> 4994d7df121b2d5f755d9c3f3244894644f30b45
+
