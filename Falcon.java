@@ -30,6 +30,7 @@ public class Falcon {
         Flag=new HashSet<Integer>();
         Finish=new HashMap<Integer ,Runnable>();
         Error=new HashMap<Integer ,Runnable>();
+        currentShoulders=Shoulder.getBack();
         hld=new Handler(Looper.getMainLooper()) {
             public void handleMessage(Message msg) {
                 switch(msg.what) {
@@ -50,7 +51,7 @@ public class Falcon {
                         break;
                     case MSG_ERROR:
                         int id2=msg.arg1;
-                        Task.remove(id2);
+                        Cache.store(Task.remove(id2));
                         Finish.remove(id2);
                         RunTask0 tmp0=(RunTask0)Error.remove(id2);
                         if(tmp0!=null) {
@@ -87,21 +88,28 @@ public class Falcon {
         if(task==null)
             throw new RuntimeException("empty task");
 
-        RunTask tmptask=new RunTask(task,currentShoulders,hld,app.index);
-        Task.get(app.index).offerLast(tmptask);
+        RunTask tmptask=(RunTask)Cache.get();
+        tmptask.init(task,currentShoulders,hld,index);
+        Task.get(index).offerLast(tmptask);
         return app;
     }
     public Falcon finish(Action0 task){
+        if(task==null)
+            throw new RuntimeException("finish task is null");
         RunTask0 tmptask=new RunTask0(task,currentShoulders);
         Finish.put(index,tmptask);
         return app;
     }
     public Falcon error(Action0 task){
+        if(task==null)
+            throw new RuntimeException("error task is null");
         RunTask0 tmptask=new RunTask0(task,currentShoulders);
         Error.put(index,tmptask);
         return app;
     }
     public Falcon flip(Shoulders sld){
+        if(sld==null)
+            throw new RuntimeException("Shoulders is null");
         currentShoulders=sld;
         return app;
     }

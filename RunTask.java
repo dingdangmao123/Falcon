@@ -14,7 +14,7 @@ public class RunTask implements Runnable{
     public Object obj;
     private Handler hld;
     public int id;
-    public RunTask(Action task, Shoulders sld, android.os.Handler hld,int id){
+    public void init(Action task, Shoulders sld, android.os.Handler hld,int id){
         this.task=task;
         this.sld=sld;
         this.hld=hld;
@@ -28,12 +28,16 @@ public class RunTask implements Runnable{
             msg.what=Falcon.MSG_SUCCESS;
             msg.arg1=id;
             hld.sendMessage(msg);
+
         }catch(Exception e){
             Message msg=Message.obtain();
             msg.obj=e;
             msg.what=Falcon.MSG_ERROR;
             msg.arg1=id;
             hld.sendMessage(msg);
+        }finally {
+            Cache.store(this);
         }
+
     }
 }
