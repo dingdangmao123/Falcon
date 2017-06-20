@@ -47,6 +47,9 @@ public class Shoulder {
         public void dispatch(Runnable e){
             exec.execute(e);
         }
+        public void close(){
+
+        }
     }
 
 }
