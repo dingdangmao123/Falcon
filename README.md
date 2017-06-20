@@ -4,7 +4,6 @@
 
 
 
-
 #### 主要特性
 
 - Falcon通过链式调用完成提交执行
@@ -39,55 +38,41 @@
 - 原理很简单，就是线程池和handler的使用。
 
 
+#### DEMO
 
 ````
-    Falcon.newTask().flip(Shoulder.getBack()).exec(new Action(){
-           @Override
-           public Object call(Object obj) {
-               Thread thd=Thread.currentThread();
-               Log.i("Thread",thd.getName());
-               String str=Curl.getText("http://www.baidu.com");
-               Log.i("call",str);
+      Falcon.newTask().flip(Shoulder.getBack()).exec(new Action(){
+            @Override
+            public Object call(Object obj) {
+                Thread thd=Thread.currentThread();
+                Log.i("Thread",thd.getName());
+                String str=Curl.getText("https://www.baidu.com");
+                Log.i("call",str);
+                return str;
 
-               return str;
+            }
+        }).flip(Shoulder.getMain()).exec(new Action(){
+            @Override
+            public Object call(Object obj) {
 
-               return str;
+                Log.i("call",obj.toString());
+                Thread thd=Thread.currentThread();
+                Log.i("Thread",thd.getName());
+                tv.setText(obj.toString());
+                return "down";
+            }
 
-           }
-       }).flip(Shoulder.getMain()).exec(new Action(){
-           @Override
-           public Object call(Object obj) {
+        }).finish(new Action0() {
 
-               Log.i("call",obj.toString());
-               Thread thd=Thread.currentThread();
-               Log.i("Thread",thd.getName());
-               tv.setText(obj.toString();
-               return "down";
-           }
-       }).finish(new Action() {
+        @Override
+        public void call(Object obj) {
+            Log.i("finish",obj.toString());
+        }
 
-               Log.i("call2",obj.toString());
-               Thread thd=Thread.currentThread();
-               Log.i("Thread",thd.getName());
-               tv.setText(obj.toString();
-               return "down";
-           }
-       }).finish(new Action0() {
+        }).error(new Action0() {
 
-           @Override
-           public void call(Object obj) {
-               Log.i("finish",obj.toString());
-           }
-
-       }).error(new Action() {
-
-       }).error(new Action0() {
-
-           @Override
-           public void call(Object obj) {
-               Log.i("error",obj.toString());
-           }
-       }).start();
-
-    
-
+        @Override
+        public void call(Object obj) {
+            Log.i("error",obj.toString());
+        }
+        }).start();
