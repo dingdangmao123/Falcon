@@ -1,16 +1,16 @@
-package Falcon;
+package com.dingdangmao.app.Falcon;
 
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Created by dingdangmao on 2017/6/18.
+ * Created by suxiaohui on 2017/6/18.
  */
 
 public class Falcon {
@@ -21,49 +21,57 @@ public class Falcon {
     private ConcurrentHashMap<Integer ,Runnable> Finish;
     private ConcurrentHashMap<Integer ,Runnable> Error;
     private HashSet<Integer> Flag;
-    private int index;
+    private MessageThread mThd;
     private Shoulders currentShoulders;
-    private Handler hld;
+    private Shoulders pool;
+    private volatile  Handler hld;
+    private int index;
 
     private Falcon(){
         Task=new ConcurrentHashMap<Integer,LinkedList<Runnable>>();
         Flag=new HashSet<Integer>();
         Finish=new ConcurrentHashMap<Integer ,Runnable>();
         Error=new ConcurrentHashMap<Integer ,Runnable>();
-        currentShoulders=Shoulder.getBack();
+        currentShoulders=pool=Shoulder.getBack();
+        mThd=new MessageThread();
         hld=new Handler(Looper.getMainLooper()) {
             public void handleMessage(Message msg) {
-                switch(msg.what) {
-                    case MSG_SUCCESS:
-                        int id=msg.arg1;
-                        RunTask tmp=(RunTask)Task.get(id).pollFirst();
-                        if(tmp==null){
-                            Task.remove(id);
-                            RunTask0 tmp0=(RunTask0)Finish.remove(id);
-                            if(tmp0!=null){
-                                tmp0.obj = msg.obj;
-                                tmp0.sld.dispatch(tmp0);
-                            }
-                            break;
-                        }
-                        tmp.obj=msg.obj;
-                        tmp.sld.dispatch(tmp);
-                        break;
-                    case MSG_ERROR:
-                        int id2=msg.arg1;
-                        Cache.store(Task.remove(id2));
-                        Finish.remove(id2);
-                        RunTask0 tmp0=(RunTask0)Error.remove(id2);
-                        if(tmp0!=null) {
-                            tmp0.obj = msg.obj;
-                            tmp0.sld.dispatch(tmp0);
-                        }
-                        break;
-                    default:
-                        break;
-                }
+                handle(msg);
             }
         };
+        mThd.start();
+    }
+    private void handle(Message msg){
+        switch(msg.what) {
+            case MSG_SUCCESS:
+                int id=msg.arg1;
+                RunTask tmp=(RunTask)Task.get(id).pollFirst();
+                if(tmp==null){
+                    Task.remove(id);
+                    RunTask0 tmp0=(RunTask0)Finish.remove(id);
+                    if(tmp0!=null){
+                        tmp0.obj = msg.obj;
+                        tmp0.sld.dispatch(tmp0);
+                    }
+                    break;
+                }
+                tmp.obj=msg.obj;
+                tmp.sld.dispatch(tmp);
+                break;
+            case MSG_ERROR:
+                int id2=msg.arg1;
+                Cache.store(Task.remove(id2));
+                Finish.remove(id2);
+                RunTask0 tmp0=(RunTask0)Error.remove(id2);
+                if(tmp0!=null) {
+                    tmp0.obj = msg.obj;
+                    tmp0.sld.dispatch(tmp0);
+                }
+                break;
+            default:
+                break;
+        }
+
     }
     private static Falcon getInstance(){
         if(app==null){
@@ -122,5 +130,21 @@ public class Falcon {
         }
         Flag.clear();
         return app;
+    }
+    class MessageThread extends Thread{
+        private volatile Handler myHandler;
+        public MessageThread(){
+            super();
+        }
+        public void run(){
+            Looper.prepare();
+            myHandler=new Handler() {
+                public void handleMessage(Message msg) {
+                    handle(msg);
+                }
+            };
+            hld=myHandler;
+            Looper.loop();
+        }
     }
 }
