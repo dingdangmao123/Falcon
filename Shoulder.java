@@ -1,4 +1,4 @@
-package com.dingdangmao.app.Falcon;
+package Falcon;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -7,7 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Created by suxiaohui on 2017/6/19.
+ * Created by dingdangmao on 2017/6/19.
  */
 
 public class Shoulder {

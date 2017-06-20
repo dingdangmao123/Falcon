@@ -1,11 +1,11 @@
-package com.dingdangmao.app.Falcon;
+package Falcon;
 
 
 import android.os.Handler;
 import android.os.Message;
 
 /**
- * Created by suxiaohui on 2017/6/18.
+ * Created by dingdangmao on 2017/6/18.
  */
 
 public class RunTask implements Runnable{

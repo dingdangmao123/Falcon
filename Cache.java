@@ -1,9 +1,9 @@
-package com.dingdangmao.app.Falcon;
+package Falcon;
 
 import java.util.LinkedList;
 
 /**
- * Created by suxiaohui on 2017/6/19.
+ * Created by dingdangmao on 2017/6/19.
  */
 
 public class Cache {
@@ -11,7 +11,7 @@ public class Cache {
     private static LinkedList<Runnable> list=new  LinkedList<Runnable>();
 
     public  synchronized static Runnable get(){
-            if (list.size() > 0)
+        if (list.size() > 0)
                 return list.removeFirst();
         return new RunTask();
     }
