@@ -10,7 +10,7 @@
 
 - 调用链中可提交任意数量的任务，按先后顺序依次执行，前一返回值作为后一输入参数
 ​
-- 调用链中随意切换任务的执行线程(主要是UI线程和后台线程池)
+- 调用链中随意切换任务的执行线程(主要是UI线程和后台线程池,默认为后台线程)
 
 ​
 
@@ -41,7 +41,7 @@
 #### DEMO
 
 ````
-      Falcon.newTask().flip(Shoulder.getBack()).exec(new Action(){
+      Falcon.newTask().exec(new Action(){
             @Override
             public Object call(Object obj) {
                 Thread thd=Thread.currentThread();
@@ -76,3 +76,5 @@
             Log.i("error",obj.toString());
         }
         }).start();
+
+        
