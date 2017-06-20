@@ -1,4 +1,4 @@
-package com.dingdangmao.app.Falcon;
+package Falcon;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -10,26 +10,26 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
- * Created by suxiaohui on 2017/6/18.
+ * Created by dingdangmao on 2017/6/18.
  */
 
 public class Falcon {
     public static final int MSG_SUCCESS=0;
     public static final int MSG_ERROR=-1;
     private static volatile Falcon app;
-    private HashMap<Integer ,LinkedList<Runnable>> Task;
-    private HashMap<Integer ,Runnable> Finish;
-    private HashMap<Integer ,Runnable> Error;
+    private ConcurrentHashMap<Integer ,LinkedList<Runnable>> Task;
+    private ConcurrentHashMap<Integer ,Runnable> Finish;
+    private ConcurrentHashMap<Integer ,Runnable> Error;
     private HashSet<Integer> Flag;
     private int index;
     private Shoulders currentShoulders;
     private Handler hld;
 
     private Falcon(){
-        Task=new HashMap<Integer,LinkedList<Runnable>>();
+        Task=new ConcurrentHashMap<Integer,LinkedList<Runnable>>();
         Flag=new HashSet<Integer>();
-        Finish=new HashMap<Integer ,Runnable>();
-        Error=new HashMap<Integer ,Runnable>();
+        Finish=new ConcurrentHashMap<Integer ,Runnable>();
+        Error=new ConcurrentHashMap<Integer ,Runnable>();
         currentShoulders=Shoulder.getBack();
         hld=new Handler(Looper.getMainLooper()) {
             public void handleMessage(Message msg) {
